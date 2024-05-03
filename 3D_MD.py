@@ -75,10 +75,41 @@ num_steps = 1000
 # Compute initial forces
 forces = compute_forces(positions)
 
+def write_xyz_file(filename, positions, atom_type='Ar', comment='This is a comment'):
+    """
+    Write positions to an XYZ file.
+
+    Parameters:
+    - filename: str, the file name to write to.
+    - positions: ndarray, the positions of the particles.
+    - atom_type: str, the type of atoms, default is 'Ar' for argon.
+    - comment: str, a comment for the XYZ file, often used to store additional data like the timestep.
+    """
+    N = positions.shape[0]
+    with open(filename, 'a') as file:  # 'a' mode to append to the file at each call
+        # Write the number of atoms
+        file.write(f"{N}\n")
+        # Write the comment
+        file.write(f"{comment}\n")
+        # Write positions
+        for i in range(N):
+            x, y, z = positions[i]
+            file.write(f"{atom_type} {x:.8f} {y:.8f} {z:.8f}\n")
+
+# Define save interval and filename
+save_interval = 10
+xyz_filename = 'simulation.xyz'
+
 # Main simulation loop
 for step in range(num_steps):
     # Integrate the equations of motion
     positions, velocities, forces = integrate(positions, velocities, forces, dt)
     
+    if step % save_interval == 0:
+        # Optional comment, e.g., could be used to write the current timestep
+        comment = f"Step {step}"
+        write_xyz_file(xyz_filename, positions, atom_type='Ar', comment=comment)
+    
+    # Other operations like calculating observables
     # Optionally, add code to compute observables like temperature or energy here
-    # and save results to a file for later analysis
+    # and save results to a file for later analysis    
