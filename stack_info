@@ -114,14 +114,17 @@ for i in range(len(file_path)):
     print("Corresponding Gregorian datetime(EST):", abstime_greg_est)
     orifilename = os.path.splitext(os.path.split(file_path[i])[1])[0]
     print(orifilename)
-
+    shifttimelist = []
     if shift:
         deltatime = abstime_greg_est - dt_fix 
         im_diff = deltatime.total_seconds()
-        shifttimelist = []
         for i in range(len(reftimelist)):
             refref = im_diff + reftimelist[i][1]
-            shifttimelist.append((i+1,refref))
+            gregtime = abstime_greg_est + timedelta(seconds=reftimelist[i][1])
+            shifttimelist.append((i+1,refref,gregtime))
         save_csv(shifttimelist,orifilename)
     else: 
-        save_csv(reftimelist,orifilename)
+        for i in range(len(reftimelist)):
+            gregtime = abstime_greg_est + timedelta(seconds=reftimelist[i][1])
+            shifttimelist.append((i+1,reftimelist[i][1],gregtime))
+        save_csv(shifttimelist,orifilename)
