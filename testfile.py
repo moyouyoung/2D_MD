@@ -19,6 +19,7 @@ print("You selected:", selected_files,len(selected_files))
 fixtime = input("Please add initial time in format YYYY-MM-DD HH:mm:SS.fff ...enter to goto default\n")
 if fixtime == "":
     shift = False
+    dt_fix = 0
 else:
     shift = True
     dt_fix = datetime.strptime(fixtime,"%Y-%m-%d %H:%M:%S.%f")
@@ -36,7 +37,7 @@ def datetime_to_seconds(dt):
 """
 
 
-def read_custom_csv(file_path,shift):
+def read_custom_csv(file_path,dt_fix,shift):
     data = []
     with open(file_path, 'r') as file:
         csv_reader = csv.reader(file, delimiter=';')
@@ -67,7 +68,7 @@ def read_custom_csv(file_path,shift):
         
     return data
 
-data_read = read_custom_csv(selected_files[0],shift)
+data_read = read_custom_csv(selected_files[0],dt_fix,shift)
 """
 for entry in data_read:
     print(entry)
